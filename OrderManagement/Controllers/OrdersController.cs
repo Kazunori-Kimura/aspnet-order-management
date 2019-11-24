@@ -82,7 +82,6 @@ namespace OrderManagement.Controllers
             {
                 return HttpNotFound();
             }
-            order.Details.Add(new Detail() { OrderId = id.Value });
             return View(order);
         }
 
