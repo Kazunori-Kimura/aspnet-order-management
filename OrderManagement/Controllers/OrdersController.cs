@@ -82,6 +82,7 @@ namespace OrderManagement.Controllers
             {
                 return HttpNotFound();
             }
+            order.Details.Add(new Detail() { OrderId = id.Value });
             return View(order);
         }
 
@@ -90,21 +91,25 @@ namespace OrderManagement.Controllers
         // 詳細については、https://go.microsoft.com/fwlink/?LinkId=317598 を参照してください。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,OrderDate,TableNumber,Details")] Order order, string submit, int detailsCount)
+        public ActionResult Edit([Bind(Include = "Id,OrderDate,TableNumber,Details")] Order order, string submit)
         {
-            // submitには押されたボタンのvalueが、
-            // detailsCountにはhiddenに格納された明細行数が格納されます
+            // submitには押されたボタンのvalueが格納されます
 
             if (submit == "Add Details")
             {
                 // 明細追加が押された
-                ViewBag.DetailsCount = detailsCount + 1;
-                order.Details.Add(new Detail());
+                order.Details.Add(new Detail() { OrderId = order.Id });
                 return View(order);
             }
 
             if (ModelState.IsValid)
             {
+                var list = order.Details.Where(item => item.Id == 0).ToList();
+                foreach (var item in list)
+                {
+                    db.Details.Add(item);
+                }
+
                 db.Entry(order).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -133,7 +138,9 @@ namespace OrderManagement.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Order order = db.Orders.Find(id);
-            order.Details.Clear();
+
+            db.Details.RemoveRange(order.Details);
+
             db.Orders.Remove(order);
             db.SaveChanges();
             return RedirectToAction("Index");

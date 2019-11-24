@@ -36,16 +36,12 @@
 
         @{
             var detail = new Detail();
-            // 明細行の合計
-            var length = Model.Details.Count + ViewBag.DetailsCount;
         }
         <table class="table">
             <tr>
                 <th>
                     @* 明細行の追加ボタン *@
                     <input type="submit" name="submit" value="Add Details" class="btn btn-primary btn-sm" />
-                    @* 追加の明細行数 *@
-                    <input type="hidden" name="detailsCount" value="@ViewBag.DetailsCount" />
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => detail.MenuName)
@@ -58,7 +54,11 @@
             @for (var index = 0; index < Model.Details.Count; index++)
             {
                 <tr>
-                    <th>@Html.Raw(index + 1)</th>
+                    <th>
+                        @Html.Raw(index + 1)
+                        @Html.HiddenFor(model => model.Details[index].Id)
+                        @Html.HiddenFor(model => model.Details[index].OrderId)
+                    </th>
                     <td>
                         @Html.EditorFor(model => model.Details[index].MenuName, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.Details[index].MenuName, "", new { @class = "text-danger" })
@@ -66,21 +66,6 @@
                     <td>
                         @Html.EditorFor(model => model.Details[index].Price, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.Details[index].MenuName, "", new { @class = "text-danger" })
-                    </td>
-                </tr>
-            }
-            @* 空の明細行 *@
-            @for (var i = Model.Details.Count; i < length; i++)
-            {
-                <tr>
-                    <th>@Html.Raw(i + 1)</th>
-                    <td>
-                        @Html.EditorFor(model => model.Details[i].MenuName, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Details[i].MenuName, "", new { @class = "text-danger" })
-                    </td>
-                    <td>
-                        @Html.EditorFor(model => model.Details[i].Price, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Details[i].MenuName, "", new { @class = "text-danger" })
                     </td>
                 </tr>
             }
