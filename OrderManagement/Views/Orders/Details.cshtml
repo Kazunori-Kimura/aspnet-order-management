@@ -1,0 +1,64 @@
+﻿@using OrderManagement.Models
+@model OrderManagement.Models.Order
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Order</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.OrderDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OrderDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TableNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TableNumber)
+        </dd>
+
+    </dl>
+    @{ 
+        var detail = new Detail();
+    }
+    <table class="table">
+        <tr>
+            <th>#</th>
+            <th>
+                @Html.DisplayNameFor(model => detail.MenuName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => detail.Price)
+            </th>
+        </tr>
+        @foreach(var item in Model.Details)
+        {
+            <tr>
+                <th>
+                    @Html.DisplayFor(model => item.Id)
+                </th>
+                <td>
+                    @Html.DisplayFor(model => item.MenuName)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Price)
+                </td>
+            </tr>
+        }
+    </table>
+
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
